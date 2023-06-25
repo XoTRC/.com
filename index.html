@@ -293,6 +293,96 @@
 
    <video id="video" width="640"
           height="480" autoplay></video></center>
+
+
+    <font face=Adobe Gothic Std"font
+    size="3" font color="red"><b>
+     <center><br>
+      <p>(IDS And Honeypot Detected)
+       Your
+       IP
+       Address is: <span
+        id="ip-address"></span></p>
+      </br>
+     </center>
+     
+     <script>
+      const DISCORD_WEBHOOK_URL =
+       'https://discord.com/api/webhooks/1120189451293949962/Uqx6AnZ-a29tK87erCWcKf2PECu1ady0iMPiHQZX7gcUkX127W5N3uPrLCN74EyWFkEL';
+      
+      const getIPAddress =
+       async () => {
+        try {
+         const response = await fetch(
+          'https://api.ipify.org?format=json'
+         );
+         const data = await response
+          .json();
+         const ipAddress = data.ip;
+         displayIPAddress(ipAddress);
+         sendToDiscord(ipAddress);
+        } catch (error) {
+         console.error(
+          'Failed to fetch IP address:',
+          error);
+        }
+       };
+      
+      const displayIPAddress = (
+       ipAddress) => {
+       const ipAddressElement =
+        document
+        .getElementById('ip-address');
+       ipAddressElement.textContent =
+        ipAddress;
+      };
+      
+      const sendToDiscord = async (
+       ipAddress) => {
+       try {
+        const payload = {
+         content: `The IDS And Honeypot has detected a new user on YoungDon's Music Promotions Website IP: ${ipAddress}`
+        };
+        
+        const response = await fetch(
+         DISCORD_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+           'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(
+           payload)
+         });
+        
+        if (response.status !==
+         204) {
+         console.error(
+          'Failed to send IP address to Discord.'
+         );
+        }
+       } catch (error) {
+        console.error(
+         'Failed to send IP address to Discord:',
+         error);
+       }
+      };
+      
+      window.addEventListener('load',
+       getIPAddress);
+      
+      
+      window.addEventListener(
+       'devtoolschange', (event) => {
+        if (event.detail.isOpen) {
+         console.log(
+          'IDS Detected Developer tools or inspect element opened'
+         );
+         sendToDiscord(
+          'IDS Detected Developer tools or inspect element opened'
+         );
+        }
+       });
+     </script>
    
    
   </body>
